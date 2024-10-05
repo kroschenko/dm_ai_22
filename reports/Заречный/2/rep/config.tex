@@ -1,0 +1,64 @@
+\newcommand{\student}{Заречный А.О.}
+
+
+% настройки предмета
+\newcommand{\lessonName}{Интеллектуальный анализ данных}
+\newcommand{\workName}{Автоэнкодеры}
+\newcommand{\num}{2}
+\newcommand{\teacher}{Крощенко А.А.}
+
+% настройки работы
+\newcommand{\purpose}{научиться применять автоэнкодеры для осуществления визуализации данных и их анализа.}
+\newcommand{\task}{ 
+    \begin{itemize}
+        \item Используя выборку по варианту, осуществить проецирование данных на плоскость первых двух и трех главных компонент с использованием нейросетевой модели автоэнкодера (с двумя и тремя нейронами в среднем слое);
+        \item Выполнить визуализацию полученных главных компонент с использованием средств библиотеки matplotlib, обозначая экземпляры разных классов с использованием разных цветовых маркеров;
+        \item Реализовать метод t-SNE для визуализации данных (использовать также 2 и 3 компонента), построить соответствующую визуализацию;
+        \item Сравнить полученные результаты с анализом с использованием PCA, сделанным в ЛР №1, сделать выводы.
+    \end{itemize}
+
+
+
+
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            Вариант & Выборка & Класс \\
+            \hline
+            5&wholesale+customers.zip&Region \\
+            \hline
+            
+        \end{tabular}
+    \end{center}
+}
+
+\newcommand{\result}{
+    Реализовали требуемые методы. Получили следующие результаты:
+
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{assests/AE_2comp.png}
+        \caption{\large Автоэнкодер, проекция на 2 компоненты}
+    \end{figure}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{assests/AE_3comp.png}
+        \caption{\large Автоэнкодер, проекция на 3 компоненты}
+    \end{figure}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{assests/TSNE_2comp.png}
+        \caption{\large tSNE, проекция на 2 компоненты}
+    \end{figure}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{assests/TSNE_3comp.png}
+        \caption{\large tSNE, проекция на 2 компоненты}
+    \end{figure}
+    Получили, что датасет разделим плохо.
+}
+\newcommand{\conclusion}{научились применять автоэнкодеры для осуществления визуализации данных и их анализа.}
