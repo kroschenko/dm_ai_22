@@ -12,12 +12,10 @@ def prepare_data():
     y = df[target_col].values
     return X, y
 
-# Подготовка данных
 X, y = prepare_data()
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# t-SNE с 2 компонентами
 def visualize_tsne_2d(X_scaled, y, perplexity):
     plt.figure(figsize=(10, 8))
     
@@ -36,11 +34,9 @@ def visualize_tsne_2d(X_scaled, y, perplexity):
     plt.legend()
     plt.show()
 
-# Визуализация t-SNE для 2D
 perplexity = 40
 visualize_tsne_2d(X_scaled, y, perplexity)
 
-# t-SNE с 3 компонентами
 def visualize_tsne_3d(X_scaled, y, perplexity):
     fig = plt.figure(figsize=(10, 8))
     
@@ -61,5 +57,4 @@ def visualize_tsne_3d(X_scaled, y, perplexity):
     ax.legend()
     plt.show()
 
-# Визуализация t-SNE для 3D
 visualize_tsne_3d(X_scaled, y, perplexity)
