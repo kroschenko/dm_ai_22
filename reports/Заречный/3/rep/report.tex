@@ -1,0 +1,64 @@
+\documentclass[]{article}
+
+
+\usepackage[a4paper, left=2cm, top=.5cm, right=.5cm, bottom=0.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[english, russian]{babel}
+% \usepackage{times}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usepackage{multirow}
+\usepackage{float}
+
+
+\setlength{\parindent}{12.5mm} 
+
+
+\begin{document}
+    \include{config}
+    \fontsize{14}{17.5}\selectfont    
+    \begin{center}
+        МИНИСТЕРСТВО ОБРАЗОВАНИЯ РЕСПУБЛИКИ БЕЛАРУСЬ \\
+        УЧРЕЖДЕНИЕ ОБРАЗОВАНИЯ \\
+        <<БРЕСТСКИЙ ГОСУДАРСТВЕННЫЙ ТЕХНИЧЕСКИЙ УНИВЕРСИТЕТ>> \\
+        ФАКУЛЬТЕТ ЭЛЕКТРОННО-ИНФОРМАЦИОННЫХ СИСТЕМ \\
+        Кафедра интеллектуальных информационных технологий \\[6cm]
+
+        Отчет \\
+        по дисциплине \\
+        <<\lessonName>> \\
+        по лабораторной работе № \num \\
+        <<\workName>> \\[5cm]
+    \end{center}
+
+    \begin{flushright}
+        \begin{minipage}{0.25\textwidth}
+            \begin{flushleft}
+                Выполнил: \\
+                студент 4 курса \\
+                группы ИИ-22 \\
+                \student \\
+                Проверил: \\
+                \teacher
+            \end{flushleft}
+        \end{minipage}
+    \end{flushright}
+
+    \vfill 
+
+	\begin{center}
+		Брест \the\year
+	\end{center}
+
+    \newpage
+    {\bfseries Цель:} \purpose
+
+    {\bfseries Постановка задачи:} \task
+
+    {\bfseries Ход работы:} \result
+
+    {\bfseries Вывод:} \conclusion
+
+\end{document}
