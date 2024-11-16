@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from ucimlrepo import fetch_ucirepo
 
+torch.manual_seed(12345789)
+
 maternal_health_risk = fetch_ucirepo(id=863)
 X = maternal_health_risk.data.features
 y = maternal_health_risk.data.targets
@@ -40,7 +42,7 @@ class Autoencoder(nn.Module):
 
     def forward(self, x):
         encoded = torch.relu(self.encoder(x))
-        decoded = torch.sigmoid(self.decoder(encoded))
+        decoded = torch.relu(self.decoder(encoded))
         return encoded, decoded
 
 
@@ -85,8 +87,8 @@ for hidden_dim in layer_dims:
 
     autoencoder.eval()
     with torch.no_grad():
-        X_pretrain = autoencoder.encoder(X_pretrain)  # Кодируем данные
-    input_dim = hidden_dim  # Обновляем размер входных данных
+        X_pretrain = autoencoder.encoder(X_pretrain)
+    input_dim = hidden_dim
 
 class PretrainedDeepNN(nn.Module):
     def __init__(self, input_dim, layer_dims, output_dim, pretrained_weights, pretrained_bias):
@@ -94,7 +96,7 @@ class PretrainedDeepNN(nn.Module):
         layers = []
         for i, hidden_dim in enumerate(layer_dims):
             layer = nn.Linear(input_dim, hidden_dim)
-            layer.weight.data = pretrained_weights[i]  # Инициализация предобученными весами
+            layer.weight.data = pretrained_weights[i]
             layer.bias.data = pretrained_bias[i]
             layers.append(layer)
             layers.append(nn.ReLU())
