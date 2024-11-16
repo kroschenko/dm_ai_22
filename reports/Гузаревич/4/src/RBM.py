@@ -1,3 +1,5 @@
+import random
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -6,6 +8,8 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix
 from torch.utils.data import DataLoader, TensorDataset
 import matplotlib.pyplot as plt
+
+torch.manual_seed(123456)
 
 # Данные из UCI
 from ucimlrepo import fetch_ucirepo
@@ -42,16 +46,16 @@ class RBM(nn.Module):
         self.v_bias = nn.Parameter(torch.zeros(visible_units))
 
     def forward(self, v):
-        h = torch.sigmoid(torch.matmul(v, self.W) + self.h_bias)
+        h = torch.relu(torch.matmul(v, self.W) + self.h_bias)
         return h
 
     def reconstruct(self, h):
-        v = torch.sigmoid(torch.matmul(h, self.W.t()) + self.v_bias)
+        v = torch.relu(torch.matmul(h, self.W.t()) + self.v_bias)
         return v
 
     def contrastive_divergence(self, v, k=1):
         for _ in range(k):
-            h = torch.bernoulli(self.forward(v))
+            h = self.forward(v)
             v = self.reconstruct(h)
         return v
 
