@@ -14,30 +14,30 @@ X = infrared_thermography_temperature.data.features
 y = infrared_thermography_temperature.data.targets
 
 
-y = y['aveOralF']  # или 'aveOralM'
+y = y['aveOralF']  # Или 'aveOralM'
 
 
 for column in X.select_dtypes(include=['object']).columns:
     le = LabelEncoder()
     X[column] = le.fit_transform(X[column])
 
+# Обработка пропусков
 X = X.fillna(X.mean())
 y = y.fillna(y.mean())
 
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Масштабируем данные
+
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-# Преобразуем в тензоры
+# Преобразование в тензоры
 X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
 y_train_tensor = torch.tensor(y_train.values, dtype=torch.float32).view(-1, 1)
 X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
 y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32).view(-1, 1)
-
 
 train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
 test_dataset = TensorDataset(X_test_tensor, y_test_tensor)
@@ -61,9 +61,8 @@ class CNNRegressor(nn.Module):
 
     def forward(self, x):
         out = self.model(x)
-        if torch.isnan(out).any():
-            print("NaN detected in output")
         return out
+
 
 
 input_dim = X_train.shape[1]
@@ -96,6 +95,7 @@ plt.ylabel("Loss")
 plt.title("Training Loss vs Epochs")
 plt.show()
 
+
 cnn_model.eval()
 y_pred = []
 with torch.no_grad():
@@ -103,6 +103,16 @@ with torch.no_grad():
         preds = cnn_model(X_batch)
         y_pred.extend(preds.numpy())
 
-# Расчет MAPE
+
+plt.figure(figsize=(10, 6))
+plt.plot(y_test.values, label="Истинные значения", color="blue")
+plt.plot(y_pred, label="Прогнозируемые значения", color="orange")
+plt.xlabel("Образцы")
+plt.ylabel("Значение")
+plt.title("Прогнозируемые vs Истинные значения")
+plt.legend()
+plt.show()
+
+
 mape = mean_absolute_percentage_error(y_test, y_pred)
 print(f"MAPE: {mape:.4f}")
