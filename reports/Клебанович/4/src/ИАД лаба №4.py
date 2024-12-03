@@ -49,21 +49,28 @@ class RBM(nn.Module):
         self.v_bias = nn.Parameter(torch.zeros(visible_units))
 
     def forward(self, v):
-        h = torch.relu(torch.matmul(v, self.W) + self.h_bias)
+        h = torch.sigmoid(torch.matmul(v, self.W) + self.h_bias)
         return h
 
     def reconstruct(self, h):
-        v = torch.relu(torch.matmul(h, self.W.t()) + self.v_bias)
+        v = torch.sigmoid(torch.matmul(h, self.W.t()) + self.v_bias)
         return v
 
-    def contrastive_divergence(self, v, k=1):
+    def contrastive_divergence(self, v, k=1, alpha=0.01):
         for _ in range(k):
-            h = self.forward(v)
-            v = self.reconstruct(h)
-        return v
+            h = torch.sigmoid(torch.matmul(v, self.W) + self.h_bias)
+            v_reconstructed = torch.sigmoid(torch.matmul(h, self.W.t()) + self.v_bias)
+            
+            positive_phase = torch.matmul(v.t(), h)
+            negative_phase = torch.matmul(v_reconstructed.t(), h)
+            
+            self.W.data += alpha * (positive_phase - negative_phase)
+            
+            self.v_bias.data += alpha * (v - v_reconstructed).mean(dim=0)
+            self.h_bias.data += alpha * (h - torch.sigmoid(torch.matmul(v_reconstructed, self.W) + self.h_bias)).mean(dim=0)
+        return v_reconstructed
 
 def train_rbm(rbm, data_loader, epochs, learning_rate):
-    optimizer = torch.optim.Adam(rbm.parameters(), lr=learning_rate)
     loss_list = []
     all_outputs = []
 
@@ -72,11 +79,8 @@ def train_rbm(rbm, data_loader, epochs, learning_rate):
         outputs = []
         for v in data_loader:
             v = v[0]
-            v_reconstructed = rbm.contrastive_divergence(v)
+            v_reconstructed = rbm.contrastive_divergence(v, alpha=learning_rate)
             loss = ((v - v_reconstructed) ** 2).mean()
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
             epoch_loss += loss.item()
             outputs.append(rbm.forward(v).detach())
         avg_loss = epoch_loss / len(data_loader)
@@ -94,7 +98,7 @@ pretrain_loss_list = []
 for i in range(len(architecture) - 1):
     print(f"Training RBM: Layer {i + 1} ({architecture[i]} -> {architecture[i + 1]})")
     rbm = RBM(architecture[i], architecture[i + 1])
-    loss_list, data = train_rbm(rbm, DataLoader(TensorDataset(data), batch_size=64), epochs=50, learning_rate=0.001)
+    loss_list, data = train_rbm(rbm, DataLoader(TensorDataset(data), batch_size=64), epochs=50, learning_rate=0.01)
     rbm_stack.append(rbm)
     pretrain_loss_list.extend(loss_list)
 
